@@ -1,6 +1,14 @@
+#include "Group.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/WindowEnums.hpp>
+
+class Rect : Figure {
+private:
+}
+
+
+
 
 int main() {
   sf::RenderWindow window(sf::VideoMode({640, 480}), "SFML works!",
