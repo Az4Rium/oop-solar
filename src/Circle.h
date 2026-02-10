@@ -4,12 +4,12 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <cmath>
 
-class Circle : public Group {
+class CircleFigure : public Group {
   float radius;
   sf::CircleShape shape;
 
 public:
-  Circle(float r) : radius(r), shape(r) { shape.setOrigin({r, r}); }
+  CircleFigure(float r) : radius(r), shape(r) { shape.setOrigin({r, r}); }
   void update(float) override {
     if (owner) {
       pos.x = owner->pos.x + orbitRadius * std::cos(angle);
@@ -22,5 +22,26 @@ public:
   void draw(sf::RenderWindow &w) override {
     w.draw(shape);
     Group::draw(w);
+  }
+
+  void handleEvent(Event &e) override {
+    Group::handleEvent(e);
+    std::visit(Overloaded{
+      [&](MouseEvent &m) {
+        // mouse logic
+        auto d = pos - sf::Vector2f(m.x,m.y);
+        if (std::hypot(d.x, d.y) < radius) {
+          message(owner, cmPressRect, this);
+          e = std::monostate{};
+        }
+      },
+      [&](KeyEvent &k) {
+
+      },
+      [&](BroadcastEvent &b) {
+
+      },
+      [&](std::monostate &) {}},
+    e);
   }
 };

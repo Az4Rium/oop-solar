@@ -31,18 +31,23 @@ public:
   }
 
   void handleEvent(Event &e) override {
-    std::visit(
-        [&](auto &&ev) {
-          using T = std::decay_t<decltype(ev)>;
+    Group::handleEvent(e);
+    std::visit(Overloaded{
+      [&](MouseEvent &m) {
+        // mouse logic
+        auto d = pos - sf::Vector2f(m.x,m.y);
+        if (d.x > pos.x && d.y > pos.y && d.x < pos.x + size && d.y < pos.y + size) {
+          message(owner, cmPressRect, this);
+          e = std::monostate{};
+        }
+      },
+      [&](KeyEvent &k) {
 
-          if constexpr (std::is_same_v<T, MouseEvent>) {
-            auto d = pos - sf::Vector2f(ev.x, ev.y);
-            if (std::hypot(d.x, d.y) < size) {
-              message(owner, 102, this);
-              e = std::monostate{};
-            }
-          }
-        },
-        e);
+      },
+      [&](BroadcastEvent &b) {
+
+      },
+      [&](std::monostate &) {}},
+    e);
   }
 };
