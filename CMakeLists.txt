@@ -17,6 +17,13 @@ add_executable(main
   src/main.cpp
   src/Figure.cpp
 )
+add_custom_command(
+  TARGET main
+  POST_BUILD
+  COMMAND $<TARGET_FILE:main>
+  # DEPENDS main
+  COMMENT "Running"
+)
 target_compile_features(main PRIVATE cxx_std_17)
 target_link_libraries(main PRIVATE SFML::Graphics)
 

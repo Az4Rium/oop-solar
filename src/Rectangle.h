@@ -2,8 +2,11 @@
 #include "Event.h"
 #include "Group.h"
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/CircleShape.hpp>
+#include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/Shape.hpp>
 #include <cmath>
 #include <type_traits>
 #include <variant>
@@ -13,7 +16,7 @@ class RectangleFigure : public Group {
 
 public:
   RectangleFigure(float s) : size(s), shape({s, s}) {
-    shape.setOrigin({s, s});
+    shape.setOrigin({s/2, s/2});
   };
 
   void update(float) override {
@@ -27,7 +30,12 @@ public:
 
   void draw(sf::RenderWindow &w) override {
     w.draw(shape);
+    sf::CircleShape dot;
+    dot.setPosition({pos.x-10.f,pos.y-10.f});
+    dot.setFillColor(sf::Color::White);
+    dot.setRadius(10.f); 
     Group::draw(w);
+    w.draw(dot);
   }
 
   void handleEvent(Event &e) override {
