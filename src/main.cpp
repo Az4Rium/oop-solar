@@ -2,6 +2,7 @@
 #include "Desktop.h"
 #include "Event.h"
 #include "Rectangle.h"
+#include "FreePoint.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/Color.hpp>
@@ -23,6 +24,12 @@ void pushSFMLEvent(const sf::Event &e) {
   }
 }
 
+Desktop::Desktop(){
+  for(int i = 0; i < 3+rand(5)) {
+    FreePoint temp;
+
+  }
+}
 int main() {
   sf::RenderWindow window(sf::VideoMode({800, 600}), "Test 2",
                           sf::Style::Titlebar | sf::Style::Close);
@@ -31,7 +38,8 @@ int main() {
   Desktop desktop;
 
   desktop.pos = {400.0f, 300.0f};
-  sf::CircleShape dot(10.f);
+  sf::CircleShape dot(100.f);
+  dot.setOrigin({100.f,100.f});
   dot.setPosition({400.0f,300.0f});
   dot.setFillColor(sf::Color::Blue);
 

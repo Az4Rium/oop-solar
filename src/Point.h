@@ -1,3 +1,4 @@
+#pragma once
 #include "Event.h"
 #include "Figure.h"
 #include "Group.h"
@@ -14,7 +15,7 @@ public:
   Point(float r) : radius(r), shape(r){
     shape.setOrigin({r,r});
   }
-  void update(float) override {
+  virtual void update(float) override {
     if(owner){
       pos.x = owner->pos.x + orbitRadius * std::cos(angle);
       pos.y = owner->pos.y + orbitRadius * std::sin(angle);
@@ -34,7 +35,6 @@ public:
           e = std::monostate();
         }
       },
-      [&](KeyEvent &k){},
       [&](BroadcastEvent &b){
         switch (b.code) {
           case cmRed: color = sf::Color::Red;
@@ -42,7 +42,7 @@ public:
         };
         e = std::monostate();
       },
-      [&](std::monostate & ){}
+      [&](auto &){}
     }, e);
   }
 };
