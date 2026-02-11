@@ -49,13 +49,7 @@ public:
           e = std::monostate{};
         }
       },
-      [&](KeyEvent &k) {
-
-      },
-      [&](BroadcastEvent &b) {
-
-      },
-      [&](std::monostate &) {}},
+      [&](auto & ){}},
     e);
   }
 };

@@ -15,11 +15,10 @@ public:
         if (k.key == sf::Keyboard::Key::A) speed += 0.1f;
         if (k.key == sf::Keyboard::Key::D) speed -= 0.1f;
       },
-      [&](MouseEvent &m){},
-      [&](BroadcastEvent &b){},
-      [&](std::monostate&){}
+      [&](auto &){},
     },e);
 
     Group::handleEvent(e);
   }
+  Desktop();
 };
