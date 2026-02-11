@@ -21,7 +21,12 @@ public:
 
   void draw(sf::RenderWindow &w) override {
     w.draw(shape);
+    sf::CircleShape dot;
+    dot.setPosition({pos.x-10.f,pos.y-10.f});
+    dot.setFillColor(sf::Color::White);
+    dot.setRadius(10.f); 
     Group::draw(w);
+    w.draw(dot);
   }
 
   void handleEvent(Event &e) override {
