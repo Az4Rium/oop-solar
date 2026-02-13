@@ -2,6 +2,7 @@
 #include "Event.h"
 #include "Figure.h"
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/System/Vector2.hpp>
 #include <vector>
 
 class Group : public Figure {
@@ -13,7 +14,11 @@ public:
     childern.push_back(f);
   }
 
-  void draw(sf::RenderWindow &w) override {
+  Group(sf::Vector2f pos, float orbitRadius): Figure(pos,orbitRadius){
+    childern.clear();
+  }
+  
+  void draw(sf::RenderWindow &w) override{
     for (Figure *f : childern)
       f->draw(w);
   }
@@ -33,4 +38,5 @@ public:
     for (Figure *f : childern)
       f->setAngle(da);
   }
+  ~Group() = default;
 };

@@ -36,7 +36,6 @@ struct BroadcastEvent {
   Figure *info;
   int code;
 };
-
 using Event =
     std::variant<std::monostate, MouseEvent, KeyEvent, BroadcastEvent>;
 

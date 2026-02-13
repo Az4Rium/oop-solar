@@ -2,20 +2,21 @@
 #include "Desktop.h"
 #include "Event.h"
 #include "FreePoint.h"
+#include "Group.h"
 #include "Rectangle.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
-#include <SFML/Graphics/Color.hpp>
 #include <SFML/System/Clock.hpp>
-#include <SFML/Window/Event.hpp>
-#include <SFML/Window/VideoMode.hpp>
-#include <SFML/Window/Window.hpp>
+#include <SFML/System/Vector2.hpp>
+#include <cmath>
+#include <cstdio>
 #include <cstdlib>
-#include <iostream>
 #include <queue>
-#include <vector>
 
 std::queue<Event> EventQueue;
+
+const int FIG_MAX = 8;
+
 
 void pushSFMLEvent(const sf::Event &e) {
   if (e.is<sf::Event::MouseButtonPressed>()) {
@@ -27,6 +28,22 @@ void pushSFMLEvent(const sf::Event &e) {
   }
 }
 
+Desktop::Desktop(sf::Vector2f pos, float orbitRadius, int figmax): Group(pos,orbitRadius){
+  // inset Free points 
+  for(int i = 0; 3 + rand()%5;i++) {
+    insert(new FreePoint({10.f+rand()%800,10.f+rand()%600},0,0,{5.f+rand()%40,5.f+rand()%40}));
+  }
+  float angle = 0;
+  int rr = 150;
+  Group* p;
+  for(int i = 0; i < figmax; i++){
+    if(i % 2 != 0){
+      p = new CircleFigure({this->pos.x+std::round(rr*std::cos(angle)),pos.y}) 
+    }
+  }
+}
+
+
 int main() {
   sf::RenderWindow window(sf::VideoMode({800, 600}), "Test 2",
                           sf::Style::Titlebar | sf::Style::Close);
@@ -34,28 +51,11 @@ int main() {
 
   Desktop desktop;
 
-  for (int i = 0; i < 3 + rand() % 5; i++)
-     desktop.insert(new FreePoint(
-         5.f, {float(50.f + rand() % 800), float(50.f + rand() % 600)},
-         {-5.f + rand() % 20, -5.f + rand() % 20}, 800, 600));
-    desktop.pos = {400.0f, 300.0f};
+  desktop.pos = {400.0f, 300.0f};
   sf::CircleShape dot(100.f);
   dot.setOrigin({100.f, 100.f});
   dot.setPosition({400.0f, 300.0f});
   dot.setFillColor(sf::Color::Blue);
-  // FreePoint temp(10.f, {400, 300}, {1.f, 1.f}, 800, 600);
-  // desktop.insert(&temp);
-   CircleFigure circle(50.f);
-   circle.orbitRadius = 120.f;
-   circle.color = sf::Color::Green;
-   circle.angle = 0.0f;
-   desktop.insert(&circle);
-
-   RectangleFigure rect(100.f);
-   rect.orbitRadius = 120.f;
-   circle.angle = 180.0f;
-   rect.color = sf::Color::Red;
-   desktop.insert(&rect);
 
   sf::Clock clock;
 

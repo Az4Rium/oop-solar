@@ -4,6 +4,7 @@
 #include "Group.h"
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/Color.hpp>
+#include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Window.hpp>
 #include <cmath>
 #include <variant>
@@ -13,37 +14,18 @@ class Point : public Figure {
 
 public:
   float radius;
-  Point(float r) : radius(r), shape(r) {
-    shape.setOrigin({r, r});
-    shape.setRadius(r);
+  Point(sf::Vector2f pos, float orbitRadius, float angle)
+      : Figure(pos, orbitRadius) {
+    this->pos = pos;
+    this->orbitRadius = 0;
+    this->angle = angle;
+
+    radius = 5.f;
+    shape.setRadius(radius);
+    shape.setOrigin({radius, radius});
   }
-  virtual void update(float) override {
-    if (owner) {
-      pos.x = owner->pos.x + orbitRadius * std::cos(angle);
-      pos.y = owner->pos.y + orbitRadius * std::sin(angle);
-    }
-    shape.setPosition(pos);
-    shape.setFillColor(color);
-  }
-  void draw(sf::RenderWindow &w) override { w.draw(shape); }
-  void handleEvent(Event &e) override {
-    std::visit(Overloaded{[&](MouseEvent &m) {
-                            auto r = pos - sf::Vector2f(m.x, m.y);
-                            if (std::hypot(r.x, r.y) < radius) {
-                              message(owner, cmPressPoint, this);
-                              e = std::monostate();
-                            }
-                          },
-                          [&](BroadcastEvent &b) {
-                            switch (b.code) {
-                            case cmRed:
-                              color = sf::Color::Red;
-                            case cmGreen:
-                              color = sf::Color::Green;
-                            };
-                            e = std::monostate();
-                          },
-                          [&](auto &) {}},
-               e);
-  }
+  ~Point() = default;
+  virtual void update(float) override;
+  void draw(sf::RenderWindow &w) override;
+  void handleEvent(Event &e) override;
 };

@@ -18,44 +18,22 @@ class FreePoint : public Point {
 public:
   float radius;
   sf::Vector2f velocity;
-  FreePoint(float r, sf::Vector2f initialPos, sf::Vector2f initialVel, int winW,
-            int winH)
-      : Point(r), velocity(initialVel), windowWidth(winW), windowHeight(winH) {
-    pos = initialPos;
-    shape.setPosition(pos);
-    shape.setFillColor(color);
-    radius = r;
+  FreePoint(sf::Vector2f pos, float orbitRadius, float angle, sf::Vector2f velocity) : Point(pos,orbitRadius, angle){
+    this->orbitRadius = 0;
+    this->pos = pos;
+    this->velocity = velocity;
+    sf::Color(1+rand()%255,1+rand()%255,1+rand()%255);
+    owner = nullptr;
     shape.setRadius(radius);
-  }
-  void update(float) override {
-    if (pos.x + velocity.x > windowWidth - radius || pos.x + velocity.x < 0)
-      velocity.x *= -1;
-    else
-      pos.x += velocity.x;
-    if (pos.y + velocity.y > windowHeight - radius || pos.y + velocity.y < 0)
-      velocity.y *= -1;
-    else
-      pos.y += velocity.y;
-
-    shape.setPosition(pos);
-    message(nullptr, cmCollision, this);
-  }
+    shape.setFillColor(color);
+    shape.setOrigin({radius,radius});
+  } 
+  void update(float) override;
   void draw(sf::RenderWindow &w) override {
-    printf("risu\n");
     w.draw(shape);
+    
   }
 
-  void handleEvent(Event &e) override {
-    std::visit(Overloaded{[&](BroadcastEvent &b) {
-      if (b.code == cmRed){
-        if(b.addr == this){
-          velocity.x *= -1;
-          velocity.y *= -1;
-          pos.x += 5*velocity.x;
-          pos.y += 5*velocity.y;
-        }
-      }
-    }, [&](auto &) {}}, e);
-  }
+  void handleEvent(Event &e) override;
   ~FreePoint() = default;
 };
