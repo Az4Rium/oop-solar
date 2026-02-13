@@ -1,13 +1,19 @@
 #pragma once
+#include "Event.h"
+#include "FreePoint.h"
 #include "Group.h"
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/System/Vector2.hpp>
 #include <cmath>
 
 class CircleFigure : public Group {
   float radius;
   sf::CircleShape shape;
 
+  float dist(sf::Vector2f a, sf::Vector2f b){
+    return std::hypot(b.x - a.x,b.y-a.y);
+  }
 public:
   CircleFigure(float r) : radius(r), shape(r) { shape.setOrigin({r, r}); }
   void update(float) override {
@@ -38,6 +44,15 @@ public:
         if (std::hypot(d.x, d.y) < radius) {
           message(owner, cmPressRect, this);
           e = std::monostate{};
+        }
+      },
+      [&](BroadcastEvent &b){
+
+        if(b.code == cmCollision){
+          auto other = static_cast<FreePoint*>(b.info);
+          if (dist(pos,other->pos + other->velocity)+other->radius<radius){
+            message(b.info,cmRed,this);
+          }
         }
       },
       [&](auto &){}},

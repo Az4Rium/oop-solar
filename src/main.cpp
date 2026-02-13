@@ -1,8 +1,8 @@
 #include "Circle.h"
 #include "Desktop.h"
 #include "Event.h"
-#include "Rectangle.h"
 #include "FreePoint.h"
+#include "Rectangle.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/Color.hpp>
@@ -10,7 +10,10 @@
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/VideoMode.hpp>
 #include <SFML/Window/Window.hpp>
+#include <cstdlib>
+#include <iostream>
 #include <queue>
+#include <vector>
 
 std::queue<Event> EventQueue;
 
@@ -24,12 +27,6 @@ void pushSFMLEvent(const sf::Event &e) {
   }
 }
 
-Desktop::Desktop(){
-  for(int i = 0; i < 3+rand(5)) {
-    FreePoint temp;
-
-  }
-}
 int main() {
   sf::RenderWindow window(sf::VideoMode({800, 600}), "Test 2",
                           sf::Style::Titlebar | sf::Style::Close);
@@ -37,23 +34,28 @@ int main() {
 
   Desktop desktop;
 
-  desktop.pos = {400.0f, 300.0f};
+  for (int i = 0; i < 3 + rand() % 5; i++)
+     desktop.insert(new FreePoint(
+         5.f, {float(50.f + rand() % 800), float(50.f + rand() % 600)},
+         {-5.f + rand() % 20, -5.f + rand() % 20}, 800, 600));
+    desktop.pos = {400.0f, 300.0f};
   sf::CircleShape dot(100.f);
-  dot.setOrigin({100.f,100.f});
-  dot.setPosition({400.0f,300.0f});
+  dot.setOrigin({100.f, 100.f});
+  dot.setPosition({400.0f, 300.0f});
   dot.setFillColor(sf::Color::Blue);
+  // FreePoint temp(10.f, {400, 300}, {1.f, 1.f}, 800, 600);
+  // desktop.insert(&temp);
+   CircleFigure circle(50.f);
+   circle.orbitRadius = 120.f;
+   circle.color = sf::Color::Green;
+   circle.angle = 0.0f;
+   desktop.insert(&circle);
 
-  CircleFigure circle(50.f);
-  circle.orbitRadius = 120.f;
-  circle.color = sf::Color::Green;
-  circle.angle = 0.0f;
-  desktop.insert(&circle);
-
-  RectangleFigure rect(100.f);
-  rect.orbitRadius = 120.f;
-  circle.angle = 180.0f;
-  rect.color = sf::Color::Red;
-  desktop.insert(&rect);
+   RectangleFigure rect(100.f);
+   rect.orbitRadius = 120.f;
+   circle.angle = 180.0f;
+   rect.color = sf::Color::Red;
+   desktop.insert(&rect);
 
   sf::Clock clock;
 
@@ -64,7 +66,6 @@ int main() {
       }
       pushSFMLEvent(*e);
     }
-
     float dt = clock.restart().asSeconds();
     desktop.setAngle(dt * desktop.speed);
     desktop.update(dt);
@@ -78,9 +79,8 @@ int main() {
       window.close();
     window.clear(sf::Color::Black);
     desktop.draw(window);
-    window.draw(dot);
+    // window.draw(dot);
     window.display();
   }
-
   return 0;
 }
