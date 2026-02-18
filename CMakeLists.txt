@@ -16,6 +16,10 @@ FetchContent_MakeAvailable(SFML)
 add_executable(main 
   src/main.cpp
   src/Figure.cpp
+  src/Point.cpp
+  src/Rectangle.cpp
+  src/FreePoint.cpp
+  src/Circle.cpp
 )
 # add_custom_command(
 #   TARGET main

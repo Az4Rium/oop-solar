@@ -23,6 +23,9 @@ public:
       : Group(pos, orbitRadius) {
     radius = r;
     this->angle = angle;
+    this->color = color;
+    shape.setFillColor(color);
+    shape.setRadius(r);
   };
   void update(float) override;
   void draw(sf::RenderWindow &w) override;

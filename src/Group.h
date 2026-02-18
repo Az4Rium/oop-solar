@@ -14,11 +14,11 @@ public:
     childern.push_back(f);
   }
 
-  Group(sf::Vector2f pos, float orbitRadius): Figure(pos,orbitRadius){
+  Group(sf::Vector2f pos, float orbitRadius) : Figure(pos, orbitRadius) {
     childern.clear();
   }
-  
-  void draw(sf::RenderWindow &w) override{
+
+  void draw(sf::RenderWindow &w) override {
     for (Figure *f : childern)
       f->draw(w);
   }
@@ -38,5 +38,5 @@ public:
     for (Figure *f : childern)
       f->setAngle(da);
   }
-  ~Group() = default;
+  virtual ~Group() = default;
 };

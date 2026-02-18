@@ -9,7 +9,6 @@
 #include <SFML/System/Clock.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <cmath>
-#include <cstdio>
 #include <cstdlib>
 #include <queue>
 
@@ -30,9 +29,9 @@ void pushSFMLEvent(const sf::Event &e) {
 Desktop::Desktop(sf::Vector2f pos, float orbitRadius, int figmax)
     : Group(pos, orbitRadius) {
   // inset Free points
-  for (int i = 0; 3 + rand() % 5; i++) {
-    // insert(new FreePoint({10.f + rand() % 800, 10.f + rand() % 600}, 0, 0,
-    //                      {5.f + rand() % 40, 5.f + rand() % 40}));
+  for (int i = 0; i < 3 + rand() % 5; i++) {
+    insert(new FreePoint({10.f + rand() % 800, 10.f + rand() % 600}, 0, 0,
+                         {5.f + rand() % 40, 5.f + rand() % 40}));
   }
   float angle = 0;
   int rr = 150;
@@ -49,7 +48,7 @@ Desktop::Desktop(sf::Vector2f pos, float orbitRadius, int figmax)
                               rr - 25, 50, angle);
       insert(p);
     }
-    angle += 2 * M_PI / figmax;
+    angle += ((3.1415 / figmax));
   }
 }
 
@@ -59,7 +58,6 @@ int main() {
   window.setFramerateLimit(60);
 
   Desktop desktop({400, 300}, 300, 8);
-
   sf::Clock clock;
 
   while (window.isOpen()) {

@@ -17,10 +17,11 @@ class RectangleFigure : public Group {
 
 public:
   ~RectangleFigure() = default;
-  RectangleFigure(sf::Vector2f pos, float orbitRadius, float size,float angle) : Group(pos, orbitRadius){
+  RectangleFigure(sf::Vector2f pos, float orbitRadius, float size, float angle)
+      : Group(pos, orbitRadius) {
     this->size = size;
-    shape.setSize({size,size});
-    shape.setOrigin({size/2,size/2});
+    shape.setSize({size, size});
+    shape.setOrigin({size / 2, size / 2});
   };
   void update(float) override;
 

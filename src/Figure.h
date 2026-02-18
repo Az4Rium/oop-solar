@@ -15,7 +15,7 @@ public:
 
   Group *owner = nullptr;
 
-  ~Figure() = default;
+  virtual ~Figure() = default;
   Figure(sf::Vector2f pos, float orbitRadius);
   virtual void draw(sf::RenderWindow &) {}
   virtual void update(float) {}
