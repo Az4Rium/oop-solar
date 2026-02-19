@@ -9,23 +9,21 @@ class Group : public Figure {
 public:
   std::vector<Figure *> childern;
 
+  Group(sf::Vector2f pos, float r) : Figure(pos, r) { childern.clear(); }
+
   void insert(Figure *f) {
     f->owner = this;
     childern.push_back(f);
   }
 
-  Group(sf::Vector2f pos, float orbitRadius) : Figure(pos, orbitRadius) {
-    childern.clear();
+  void update(float dt) override {
+    for (Figure *f : childern)
+      f->update(dt);
   }
 
   void draw(sf::RenderWindow &w) override {
     for (Figure *f : childern)
       f->draw(w);
-  }
-
-  void update(float dt) override {
-    for (Figure *f : childern)
-      f->update(dt);
   }
 
   void handleEvent(Event &e) override {
@@ -38,5 +36,10 @@ public:
     for (Figure *f : childern)
       f->setAngle(da);
   }
-  virtual ~Group() = default;
+
+  ~Group() {
+    for (auto c : childern) {
+      delete c;
+    }
+  }
 };

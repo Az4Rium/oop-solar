@@ -13,22 +13,22 @@ void Point::update(float angle) {
 void Point::draw(sf::RenderWindow &w) { w.draw(shape); }
 
 void Point::handleEvent(Event &e) {
-  std::visit(Overloaded{[&](MouseEvent &m) {
-                          auto r = pos - sf::Vector2f(m.x, m.y);
-                          if (std::hypot(r.x, r.y) < radius) {
-                            message(owner, cmPressPoint, this);
-                          }
-                        },
-                        [&](BroadcastEvent &b) {
-                          switch (b.code) {
-                          case cmRed:
-                            color = sf::Color::Red;
-                            break;
-                          case cmGreen:
-                            color = sf::Color::Green;
-                            break;
-                          };
-                        },
-                        [&](auto &) {}},
-             e);
+  // std::visit(Overloaded{[&](MouseEvent &m) {
+  //                         auto r = pos - sf::Vector2f(m.x, m.y);
+  //                         if (std::hypot(r.x, r.y) < radius) {
+  //                           message(owner, cmPressPoint, this);
+  //                         }
+  //                       },
+  //                       [&](BroadcastEvent &b) {
+  //                         switch (b.code) {
+  //                         case cmRed:
+  //                           color = sf::Color::Red;
+  //                           break;
+  //                         case cmGreen:
+  //                           color = sf::Color::Green;
+  //                           break;
+  //                         };
+  //                       },
+  //                       [&](auto &) {}},
+  //            e);
 }

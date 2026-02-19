@@ -13,13 +13,14 @@ FetchContent_Declare(SFML
     SYSTEM)
 FetchContent_MakeAvailable(SFML)
 
-add_executable(main 
+add_executable(main
   src/main.cpp
   src/Figure.cpp
-  src/Point.cpp
-  src/Rectangle.cpp
-  src/FreePoint.cpp
+  # src/Point.cpp
+  # src/Rectangle.cpp
+  # src/FreePoint.cpp
   src/Circle.cpp
+  src/Comet.cpp
 )
 # add_custom_command(
 #   TARGET main

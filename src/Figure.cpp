@@ -13,11 +13,11 @@ void Figure::message(Figure *addr, int code, Figure *info) {
     EventQueue.push(e);
 }
 
-Figure::Figure(sf::Vector2f pos, float orbitRadius) {
-  this->pos = pos;
-  this->orbitRadius = orbitRadius;
-  angle = 0;
-  owner = nullptr;
-}
+// Figure::Figure(sf::Vector2f pos, float orbitRadius) {
+//   this->pos = pos;
+//   this->orbitRadius = orbitRadius;
+//   angle = 0;
+//   owner = nullptr;
+// }
 
-void Figure::setColor(int r, int g, int b) { color = sf::Color(r, g, b); }
+// void Figure::setColor(int r, int g, int b) { color = sf::Color(r, g, b); }

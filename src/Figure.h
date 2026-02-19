@@ -11,16 +11,14 @@ public:
   sf::Vector2f pos;
   float angle = 0.f;
   float orbitRadius = 0.f;
-  sf::Color color = sf::Color::White;
 
   Group *owner = nullptr;
 
   virtual ~Figure() = default;
-  Figure(sf::Vector2f pos, float orbitRadius);
+  Figure(sf::Vector2f pos, float r) : pos(pos), orbitRadius(r) {};
   virtual void draw(sf::RenderWindow &) {}
   virtual void update(float) {}
   virtual void handleEvent(Event &) {}
-  virtual void setColor(int r, int g, int b);
   virtual void setAngle(float da) { angle += da; }
   void message(Figure *addr, int code, Figure *info);
 };

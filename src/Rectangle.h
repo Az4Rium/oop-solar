@@ -1,0 +1,35 @@
+#pragma once
+#include "Event.h"
+#include "Group.h"
+#include "Point.h"
+#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/CircleShape.hpp>
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/Shape.hpp>
+#include <SFML/System/Vector2.hpp>
+#include <cmath>
+#include <type_traits>
+#include <variant>
+class RectangleFigure : public Group {
+  float size;
+  sf::RectangleShape shape;
+
+public:
+  ~RectangleFigure() = default;
+  RectangleFigure(sf::Vector2f pos, float orbitRadius, float size, float angle)
+      : Group(pos, orbitRadius) {
+    this->size = size;
+    this->angle = angle;
+    shape.setSize({size, size});
+    shape.setOrigin({size / 2, size / 2});
+    shape.setOutlineColor(color);
+    shape.setFillColor(sf::Color::Transparent);
+    shape.setOutlineThickness(5.f);
+  };
+  void update(float) override;
+  float getSize() { return size; };
+  void draw(sf::RenderWindow &w) override;
+  void handleEvent(Event &e) override;
+};

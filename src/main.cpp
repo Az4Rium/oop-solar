@@ -1,17 +1,19 @@
 #include "Circle.h"
+#include "Comet.h"
 #include "Desktop.h"
 #include "Event.h"
 #include "FreePoint.h"
 #include "Group.h"
-#include "Point.h"
-#include "Rectangle.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
+#include <SFML/Graphics/Color.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <cmath>
+
 #include <cstdlib>
 #include <queue>
+#include <vector>
 
 std::queue<Event> EventQueue;
 
@@ -28,73 +30,71 @@ void pushSFMLEvent(const sf::Event &e) {
 }
 
 Desktop::Desktop(sf::Vector2f pos, float orbitRadius, int figmax)
-    : Group(pos, orbitRadius) {
-  // inset Free points
-  for (int i = 0; i < 3 + rand() % 5; i++) {
-    FreePoint *p = new FreePoint({10.f + rand() % 800, 10.f + rand() % 600}, 0,
-                                 0, {5.f + rand() % 10, 5.f + rand() % 10});
-    p->setWindowSize({800, 600});
-    p->owner = this;
-    insert(p);
-  }
-  float angle = 0;
-  int rr = 150;
-  Group *p;
-  for (int i = 0; i < figmax; i++) {
-    if (i % 2 != 0) {
-      p = new CircleFigure({(pos.x + std::round(rr * std::cos(angle))),
-                            pos.y + std::round(rr * std::sin(angle))},
-                           rr - 25, 50, angle, sf::Color::Green);
-      p->owner = this;
-      insert(p);
-    } else {
-      p = new RectangleFigure({pos.x + std::round(rr * std::cos(angle)),
-                               pos.y + std::round(rr * std::sin(angle))},
-                              rr - 25, 100, angle);
-      p->owner = this;
-      insert(p);
-    }
-    for (int i = 0; i < figmax; i++) {
-      float a = i * 2 * M_PI / figmax;
-
-      Point *pp = new Point({pos.x, pos.y}, 25, a);
-      p->insert(pp);
-    }
-    angle += 2 * ((M_PI / figmax));
-  }
-}
+    : Group(pos, orbitRadius) {}
 
 int main() {
   srand(time(nullptr));
-  sf::RenderWindow window(sf::VideoMode({800, 600}), "Test 2",
+  sf::RenderWindow window(sf::VideoMode({1000, 800}), "Solar System",
                           sf::Style::Titlebar | sf::Style::Close);
   window.setFramerateLimit(60);
 
-  window.setPosition({1280, 720});
-  Desktop desktop({400, 300}, 300, 8);
   sf::Clock clock;
-  desktop.speed = 1.f;
 
+  SolarBody *sun = new SolarBody({500, 400}, 0, 40, 0, sf::Color::Yellow);
+  SolarBody *mercury =
+      new SolarBody({0, 0}, 100, 8, 0.7f, sf::Color(171, 80, 63));
+  SolarBody *venus =
+      new SolarBody({0, 0}, 130, 10, 0.5f, sf::Color(171, 124, 63));
+  SolarBody *earth =
+      new SolarBody({0, 0}, 150, 12, 0.4f, sf::Color(63, 171, 110));
+  SolarBody *moon =
+      new SolarBody({0, 0}, 20, 4, 1.5f, sf::Color(158, 158, 158));
+  earth->insert(moon);
+  SolarBody *mars = new SolarBody({0, 0}, 190, 10, 0.3f, sf::Color::Red);
+  SolarBody *jupter =
+      new SolarBody({0, 0}, 320, 25, 0.2f, sf::Color(200, 150, 100));
+  for (int i = 0; i < 4; i++) {
+    SolarBody *m = new SolarBody({0, 0}, 40 + i * 10, 3, 1.5f - i * 0.3f,
+                                 sf::Color::White);
+    jupter->insert(m);
+  }
+  sun->insert(mercury);
+  // sun->insert(venus);
+  sun->insert(earth);
+  sun->insert(mars);
+  sun->insert(jupter);
+
+  std::vector<Comet> comets;
+  for (int i = 0; i < rand() % 6; i++)
+    comets.emplace_back(1000, 800);
+
+  std::vector<sf::CircleShape> starts;
+  for (int i = 0; i < std::round(1000 * 800 * 0.1); i++) {
+    sf::CircleShape s(1.f);
+    s.setPosition({float(rand() % 1000), float(rand() % 800)});
+    s.setFillColor({uint8_t(rand() % 256), uint8_t(rand() % 256),
+                    uint8_t(rand() % 256), uint8_t(rand() % 256)});
+  }
   while (window.isOpen()) {
     while (std::optional<sf::Event> e = window.pollEvent()) {
       if (e->is<sf::Event::Closed>()) {
         window.close();
       }
-      pushSFMLEvent(*e);
+      //    pushSFMLEvent(*e);
     }
-    float dt = clock.restart().asSeconds();
-    desktop.setAngle(dt * desktop.speed);
-    desktop.update(dt);
 
-    while (!EventQueue.empty()) {
-      Event e = EventQueue.front();
-      EventQueue.pop();
-      desktop.handleEvent(e);
-    }
-    if (desktop.quit)
-      window.close();
+    float dt = clock.restart().asSeconds();
+
+    sun->update(dt);
+    for (auto &c : comets)
+      c.update(dt, 1000, 800);
+
     window.clear(sf::Color::Black);
-    desktop.draw(window);
+
+    sun->draw(window);
+    for (auto &c : comets)
+      c.draw(window);
+
     window.display();
   }
 
