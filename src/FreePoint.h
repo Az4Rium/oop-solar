@@ -33,7 +33,10 @@ public:
   }
   void update(float) override;
   void draw(sf::RenderWindow &w) override { w.draw(shape); }
-
+  void setWindowSize(sf::Vector2f size) {
+    windowHeight = size.y;
+    windowWidth = size.x;
+  }
   void handleEvent(Event &e) override;
   ~FreePoint() = default;
 };

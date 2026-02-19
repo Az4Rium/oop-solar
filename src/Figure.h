@@ -20,7 +20,7 @@ public:
   virtual void draw(sf::RenderWindow &) {}
   virtual void update(float) {}
   virtual void handleEvent(Event &) {}
-
+  virtual void setColor(int r, int g, int b);
   virtual void setAngle(float da) { angle += da; }
   void message(Figure *addr, int code, Figure *info);
 };

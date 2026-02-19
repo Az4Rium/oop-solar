@@ -8,6 +8,7 @@
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <cmath>
+#include <cstdio>
 
 class CircleFigure : public Group {
   float radius;
@@ -24,10 +25,14 @@ public:
     radius = r;
     this->angle = angle;
     this->color = color;
-    shape.setFillColor(color);
+    shape.setOrigin({r, r});
+    shape.setFillColor(sf::Color::Transparent);
+    shape.setOutlineColor(color);
+    shape.setOutlineThickness(5.f);
     shape.setRadius(r);
   };
   void update(float) override;
+  float getSize() { return radius; };
   void draw(sf::RenderWindow &w) override;
   void handleEvent(Event &e) override;
   ~CircleFigure() = default;

@@ -3,6 +3,7 @@
 #include "Event.h"
 #include "FreePoint.h"
 #include "Group.h"
+#include "Point.h"
 #include "Rectangle.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
@@ -30,8 +31,11 @@ Desktop::Desktop(sf::Vector2f pos, float orbitRadius, int figmax)
     : Group(pos, orbitRadius) {
   // inset Free points
   for (int i = 0; i < 3 + rand() % 5; i++) {
-    insert(new FreePoint({10.f + rand() % 800, 10.f + rand() % 600}, 0, 0,
-                         {5.f + rand() % 40, 5.f + rand() % 40}));
+    FreePoint *p = new FreePoint({10.f + rand() % 800, 10.f + rand() % 600}, 0,
+                                 0, {5.f + rand() % 10, 5.f + rand() % 10});
+    p->setWindowSize({800, 600});
+    p->owner = this;
+    insert(p);
   }
   float angle = 0;
   int rr = 150;
@@ -45,21 +49,28 @@ Desktop::Desktop(sf::Vector2f pos, float orbitRadius, int figmax)
       insert(p);
     } else {
       p = new RectangleFigure({pos.x + std::round(rr * std::cos(angle)),
-                               pos.y + std::round(rr * std::round(angle))},
-                              rr - 25, 50, angle);
+                               pos.y + std::round(rr * std::sin(angle))},
+                              rr - 25, 100, angle);
       p->owner = this;
       insert(p);
     }
-    angle += ((3.1415 / figmax));
+    for (int i = 0; i < figmax; i++) {
+      float a = i * 2 * M_PI / figmax;
+
+      Point *pp = new Point({pos.x, pos.y}, 25, a);
+      p->insert(pp);
+    }
+    angle += 2 * ((M_PI / figmax));
   }
 }
 
 int main() {
-  srand(rand() % rand());
+  srand(time(nullptr));
   sf::RenderWindow window(sf::VideoMode({800, 600}), "Test 2",
                           sf::Style::Titlebar | sf::Style::Close);
   window.setFramerateLimit(60);
 
+  window.setPosition({1280, 720});
   Desktop desktop({400, 300}, 300, 8);
   sf::Clock clock;
   desktop.speed = 1.f;
@@ -82,7 +93,7 @@ int main() {
     }
     if (desktop.quit)
       window.close();
-    //  window.clear(sf::Color::Black);
+    window.clear(sf::Color::Black);
     desktop.draw(window);
     window.display();
   }

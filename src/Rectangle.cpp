@@ -1,15 +1,15 @@
 #include "Rectangle.h"
-#include "Circle.h"
 #include "Event.h"
-#include <SFML/Graphics/CircleShape.hpp>
+#include "Group.h"
 
 void RectangleFigure::update(float angle) {
   if (owner) {
-    pos.x = owner->pos.x + orbitRadius * std::cos(angle);
-    pos.y = owner->pos.y + orbitRadius * std::sin(angle);
+    pos.x = owner->pos.x + orbitRadius * std::cos(this->angle);
+    pos.y = owner->pos.y + orbitRadius * std::sin(this->angle);
   }
   shape.setPosition(pos);
-  shape.setFillColor(color);
+  shape.setOutlineColor(color);
+  Group::update(angle);
 };
 
 void RectangleFigure::draw(sf::RenderWindow &w) {
@@ -18,7 +18,6 @@ void RectangleFigure::draw(sf::RenderWindow &w) {
 };
 
 void RectangleFigure::handleEvent(Event &e) {
-  Group::handleEvent(e);
   std::visit(Overloaded{[&](MouseEvent &m) {
                           // mouse logic
                           auto d = pos - sf::Vector2f(m.x, m.y);
@@ -29,6 +28,17 @@ void RectangleFigure::handleEvent(Event &e) {
                             e = std::monostate{};
                           }
                         },
+                        [&](BroadcastEvent &b) {
+                          switch (b.code) {
+                          case cmRed:
+                            Figure::setColor(255, 0, 0);
+                            break;
+                          case cmGreen:
+                            Figure::setColor(0, 255, 0);
+                            break;
+                          }
+                        },
                         [&](auto &) {}},
              e);
+  Group::handleEvent(e);
 };
