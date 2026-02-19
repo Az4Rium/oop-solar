@@ -17,10 +17,14 @@ public:
         [&](KeyEvent &k) {
           if (k.key == sf::Keyboard::Key::Escape)
             quit = true;
-          if (k.key == sf::Keyboard::Key::A)
+          if (k.key == sf::Keyboard::Key::A){
+            printf("Speed increased\n");
             speed += 0.1f;
-          if (k.key == sf::Keyboard::Key::D)
+          }
+          if (k.key == sf::Keyboard::Key::D){
             speed -= 0.1f;
+            printf("Speed decreased\n");
+          }
         },
         [&](auto &) {},
     },

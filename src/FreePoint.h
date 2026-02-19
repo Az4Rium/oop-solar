@@ -18,21 +18,21 @@ class FreePoint : public Point {
 public:
   float radius;
   sf::Vector2f velocity;
-  FreePoint(sf::Vector2f pos, float orbitRadius, float angle, sf::Vector2f velocity) : Point(pos,orbitRadius, angle){
+  FreePoint(sf::Vector2f pos, float orbitRadius, float angle,
+            sf::Vector2f velocity)
+      : Point(pos, orbitRadius, angle) {
     this->orbitRadius = 0;
     this->pos = pos;
     this->velocity = velocity;
-    sf::Color(1+rand()%255,1+rand()%255,1+rand()%255);
+    sf::Color(1 + rand() % 255, 1 + rand() % 255, 1 + rand() % 255);
+    this->radius = 5.f;
     owner = nullptr;
     shape.setRadius(radius);
     shape.setFillColor(color);
-    shape.setOrigin({radius,radius});
-  } 
-  void update(float) override;
-  void draw(sf::RenderWindow &w) override {
-    w.draw(shape);
-    
+    shape.setOrigin({radius, radius});
   }
+  void update(float) override;
+  void draw(sf::RenderWindow &w) override { w.draw(shape); }
 
   void handleEvent(Event &e) override;
   ~FreePoint() = default;

@@ -41,11 +41,13 @@ Desktop::Desktop(sf::Vector2f pos, float orbitRadius, int figmax)
       p = new CircleFigure({(pos.x + std::round(rr * std::cos(angle))),
                             pos.y + std::round(rr * std::sin(angle))},
                            rr - 25, 50, angle, sf::Color::Green);
+      p->owner = this;
       insert(p);
     } else {
       p = new RectangleFigure({pos.x + std::round(rr * std::cos(angle)),
                                pos.y + std::round(rr * std::round(angle))},
                               rr - 25, 50, angle);
+      p->owner = this;
       insert(p);
     }
     angle += ((3.1415 / figmax));
@@ -53,12 +55,14 @@ Desktop::Desktop(sf::Vector2f pos, float orbitRadius, int figmax)
 }
 
 int main() {
+  srand(rand() % rand());
   sf::RenderWindow window(sf::VideoMode({800, 600}), "Test 2",
                           sf::Style::Titlebar | sf::Style::Close);
   window.setFramerateLimit(60);
 
   Desktop desktop({400, 300}, 300, 8);
   sf::Clock clock;
+  desktop.speed = 1.f;
 
   while (window.isOpen()) {
     while (std::optional<sf::Event> e = window.pollEvent()) {
@@ -78,9 +82,10 @@ int main() {
     }
     if (desktop.quit)
       window.close();
-    window.clear(sf::Color::Black);
+    //  window.clear(sf::Color::Black);
     desktop.draw(window);
     window.display();
   }
+
   return 0;
 }
