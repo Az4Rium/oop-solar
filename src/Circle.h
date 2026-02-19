@@ -18,6 +18,7 @@ public:
       : Group(pos, orbitRadius) {
     radius = r;
     this->orbitRadius = orbitRadius;
+    this->orbitSpeed = speed;
     shape.setOrigin({r, r});
     shape.setRadius(radius);
     shape.setFillColor(color);

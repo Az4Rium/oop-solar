@@ -65,15 +65,16 @@ int main() {
   sun->insert(jupter);
 
   std::vector<Comet> comets;
-  for (int i = 0; i < rand() % 6; i++)
+  for (int i = 0; i < rand() % 10; i++)
     comets.emplace_back(1000, 800);
 
-  std::vector<sf::CircleShape> starts;
-  for (int i = 0; i < std::round(1000 * 800 * 0.1); i++) {
-    sf::CircleShape s(1.f);
+  std::vector<sf::CircleShape> stars;
+  for (int i = 0; i < std::round(1000 * 800 * 0.005); i++) {
+    sf::CircleShape s(0.5f);
     s.setPosition({float(rand() % 1000), float(rand() % 800)});
-    s.setFillColor({uint8_t(rand() % 256), uint8_t(rand() % 256),
+    s.setFillColor({uint8_t(rand() % 256), uint8_t(rand() % 200),
                     uint8_t(rand() % 256), uint8_t(rand() % 256)});
+    stars.push_back(s);
   }
   while (window.isOpen()) {
     while (std::optional<sf::Event> e = window.pollEvent()) {
@@ -90,6 +91,9 @@ int main() {
       c.update(dt, 1000, 800);
 
     window.clear(sf::Color::Black);
+    for (auto &s : stars) {
+      window.draw(s);
+    }
 
     sun->draw(window);
     for (auto &c : comets)
